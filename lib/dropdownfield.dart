@@ -138,6 +138,7 @@ class DropDownField extends FormField<String> {
                             if (strict &&
                                 newValue.isNotEmpty &&
                                 !items.contains(newValue))
+                                print(newValue);
                               return 'Invalid value in this field!';
                           }
 
@@ -197,7 +198,7 @@ class DropDownFieldState extends FormFieldState<String> {
   TextEditingController get _effectiveController =>
       widget.controller ?? _controller;
 
-  List<String> get _items => widget.items;
+  List<DropDownFieldItem> get _items => widget.items;
 
   void toggleDropDownVisibility() {}
 
@@ -251,14 +252,14 @@ class DropDownFieldState extends FormFieldState<String> {
     });
   }
 
-  List<ListTile> _getChildren(List<String> items) {
+  List<ListTile> _getChildren(List<DropDownFieldItem> items) {
     List<ListTile> childItems = List();
     for (var item in items) {
       if (_searchText.isNotEmpty) {
-        if (item.toUpperCase().contains(_searchText.toUpperCase()))
-          childItems.add(_getListTile(item));
+        if (item.getLabel().toUpperCase().contains(_searchText.toUpperCase()))
+          childItems.add(_getListTile(item.getLabel()));
       } else {
-        childItems.add(_getListTile(item));
+        childItems.add(_getListTile(item.getLabel()));
       }
     }
     _isSearching ? childItems : List();
@@ -307,4 +308,8 @@ class DropDownFieldState extends FormFieldState<String> {
       });
     }
   }
+}
+
+abstract class DropDownFieldItem {
+  String getLabel(); 
 }
